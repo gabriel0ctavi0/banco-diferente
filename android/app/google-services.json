@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "575158860125",
+    "project_id": "bancodiferente-23628",
+    "storage_bucket": "bancodiferente-23628.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:575158860125:android:5c70694c9c6fb94ebf90b4",
+        "android_client_info": {
+          "package_name": "bancodiferente.app.userap"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBK3c3xVbDckUpg93LfKn8DqLPWlPJkhHY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
