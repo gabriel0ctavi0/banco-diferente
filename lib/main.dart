@@ -20,75 +20,79 @@ import 'package:six_cash/util/messages.dart';
 
 import 'helper/get_di.dart' as di;
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
- late List<CameraDescription> cameras;
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+late List<CameraDescription> cameras;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
 
-  if(GetPlatform.isAndroid){
-   await FirebaseMessaging.instance.requestPermission();
-
+  if (GetPlatform.isAndroid) {
+    await FirebaseMessaging.instance.requestPermission();
   }
 
   ///firebase crashlytics
-
 
   cameras = await availableCameras();
 
   Map<String, Map<String, String>> languages = await di.init();
 
   int? orderID;
- // NotificationBody? body;
+  // NotificationBody? body;
   try {
-    final RemoteMessage? remoteMessage = await FirebaseMessaging.instance.getInitialMessage();
+    final RemoteMessage? remoteMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
     if (remoteMessage != null) {
       //body = NotificationHelper.convertNotification(remoteMessage.data);
     }
     await NotificationHelper.initialize(flutterLocalNotificationsPlugin);
     FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
-  }catch(e) {
+  } catch (e) {
     if (kDebugMode) {
       print("");
     }
   }
 
   runApp(MyApp(languages: languages, orderID: orderID));
-
 }
 
 class MyApp extends StatelessWidget {
   final Map<String, Map<String, String>>? languages;
   final int? orderID;
-  const MyApp({Key? key, required this.languages, required this.orderID}) : super(key: key);
+  const MyApp({Key? key, required this.languages, required this.orderID})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ThemeController>(builder: (themeController) {
-      return GetBuilder<LocalizationController>(builder: (localizeController) {
-        return MediaQuery(
-          data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1)),
-          child: GetMaterialApp(
-            navigatorObservers: [FlutterSmartDialog.observer],
-            builder: FlutterSmartDialog.init(),
-            title: AppConstants.appName,
-            debugShowCheckedModeBanner: false,
-            navigatorKey: Get.key,
-            theme: themeController.darkTheme ? dark : light,
-            locale: localizeController.locale,
-            translations: Messages(languages: languages),
-            fallbackLocale: Locale(AppConstants.languages[0].languageCode!, AppConstants.languages[0].countryCode),
-            initialRoute: RouteHelper.getSplashRoute(),
-            getPages: RouteHelper.routes,
-            defaultTransition: Transition.topLevel,
-            transitionDuration: const Duration(milliseconds: 500),
-          ),
+    return GetBuilder<ThemeController>(
+      builder: (themeController) {
+        return GetBuilder<LocalizationController>(
+          builder: (localizeController) {
+            return MediaQuery(
+              data: MediaQuery.of(context)
+                  .copyWith(textScaler: const TextScaler.linear(1)),
+              child: GetMaterialApp(
+                navigatorObservers: [FlutterSmartDialog.observer],
+                builder: FlutterSmartDialog.init(),
+                title: AppConstants.appName,
+                debugShowCheckedModeBanner: false,
+                navigatorKey: Get.key,
+                theme: themeController.darkTheme ? dark : light,
+                locale: localizeController.locale,
+                translations: Messages(languages: languages),
+                fallbackLocale: Locale(AppConstants.languages[0].languageCode!,
+                    AppConstants.languages[0].countryCode),
+                initialRoute: RouteHelper.getSplashRoute(),
+                getPages: RouteHelper.routes,
+                defaultTransition: Transition.topLevel,
+                transitionDuration: const Duration(milliseconds: 500),
+              ),
+            );
+          },
         );
       },
-      );
-    },
     );
   }
 }
