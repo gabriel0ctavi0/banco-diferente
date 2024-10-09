@@ -98,6 +98,13 @@ class PriceConverterHelper {
   static String balanceWithSymbol({String? balance}) {
     String? currencySymbol =
         Get.find<SplashController>().configModel!.currencySymbol;
-    return '$currencySymbol$balance';
+
+    // Verifica se o balance é nulo ou vazio, então define como "0"
+    double amount = double.tryParse(balance ?? '0') ?? 0.0;
+
+    // Formata com duas casas decimais
+    String formattedBalance = amount.toStringAsFixed(2);
+
+    return '$currencySymbol$formattedBalance';
   }
 }
