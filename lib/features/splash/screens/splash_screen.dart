@@ -18,7 +18,8 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver {
+class _SplashScreenState extends State<SplashScreen>
+    with WidgetsBindingObserver {
   late StreamSubscription<List<ConnectivityResult>> subscription;
 
   @override
@@ -27,21 +28,19 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
 
     bool isFirstTime = true;
 
-     subscription = Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> result) async {
-      if(await ApiChecker.isVpnActive()) {
-        showCustomSnackBarHelper('you are using vpn', isVpn: true, duration: const Duration(minutes: 10));
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((List<ConnectivityResult> result) async {
+      if (await ApiChecker.isVpnActive()) {
+        showCustomSnackBarHelper('you are using vpn',
+            isVpn: true, duration: const Duration(minutes: 10));
       }
-      if(isFirstTime) {
+      if (isFirstTime) {
         isFirstTime = false;
         await _route();
       }
     });
-
-
-
-
   }
-
 
   @override
   void dispose() {
@@ -49,28 +48,28 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
   }
 
   Future<void> _route() async {
-    await  Get.find<ContactController>().getContactList().then((_){
-
-
+    await Get.find<ContactController>().getContactList().then((_) {
       Get.find<SplashController>().getConfigData().then((value) {
-        if(value.isOk) {
+        if (value.isOk) {
           Timer(const Duration(seconds: 1), () async {
             Get.find<SplashController>().initSharedData().then((value) {
-              UserShortDataModel? userData = Get.find<AuthController>().getUserData();
+              UserShortDataModel? userData =
+                  Get.find<AuthController>().getUserData();
 
-              if(userData != null && (Get.find<SplashController>().configModel!.companyName != null)){
+              if (userData != null &&
+                  (Get.find<SplashController>().configModel!.companyName !=
+                      null)) {
                 Get.offNamed(RouteHelper.getLoginRoute(
-                  countryCode: userData.countryCode,phoneNumber: userData.phone,
+                  countryCode: userData.countryCode,
+                  phoneNumber: userData.phone,
                 ));
-              }else{
+              } else {
                 Get.offNamed(RouteHelper.getChoseLoginRegRoute());
               }
             });
-
           });
         }
       });
-
     });
   }
 

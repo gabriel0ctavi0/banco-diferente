@@ -68,6 +68,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
     setInitialCountryCode(widget.countryCode);
     phoneController.text = widget.phoneNumber!;
+
+    setCountryCode('+55');
   }
 
   @override
@@ -244,7 +246,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           contentPadding:
                                               const EdgeInsets.only(top: 14),
                                           prefixIcon: CustomCountryCodeWidget(
-                                            initSelect: widget.countryCode,
+                                            initSelect: '+55',
                                             onChanged: (countryCode) =>
                                                 setCountryCode(
                                                     countryCode.dialCode!),

@@ -41,7 +41,7 @@ class ConfigModel {
   String? companyPhone;
   String? companyEmail;
   BaseUrls? baseUrls;
-  String? currencySymbol;
+  String? currencySymbol = "R\$";
   String? currencyPosition;
   double? cashOutChargePercent;
   double? sendMoneyChargeFlat;
@@ -71,7 +71,7 @@ class ConfigModel {
         companyPhone: json["company_phone"].toString(),
         companyEmail: json["company_email"],
         baseUrls: BaseUrls.fromJson(json["base_urls"]),
-        currencySymbol: json["currency_symbol"],
+        currencySymbol: "R\$",
         currencyPosition: json["currency_position"] ?? 'left',
         cashOutChargePercent:
             double.tryParse('${json["cashout_charge_percent"]}') ?? 0,

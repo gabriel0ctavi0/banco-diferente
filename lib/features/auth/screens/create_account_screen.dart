@@ -112,10 +112,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                       backgroundColor: Theme.of(context).secondaryHeaderColor,
                       text: 'verify_umber'.tr,
                       onTap: () async {
-                        String phone =
-                            '${Get.find<CreateAccountController>().countryCode}${numberFieldController.text}';
+                        String phone = '+55${numberFieldController.text}';
 
-                        PhoneNumber phoneNumber = PhoneNumber.parse(phone);
+                        PhoneNumber phoneNumber =
+                            PhoneNumber.parse(phone, callerCountry: IsoCode.BR);
                         String numberWithCountryCode =
                             phoneNumber.international;
                         bool isValid =

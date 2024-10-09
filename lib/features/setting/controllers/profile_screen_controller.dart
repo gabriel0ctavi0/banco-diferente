@@ -36,38 +36,43 @@ class ProfileController extends GetxController implements GetxService {
     _userInfo = value;
   }
 
-
-  Future<void> getProfileData({bool reload = false, bool isUpdate = false}) async {
-    if(reload || _userInfo == null) {
+  Future<void> getProfileData(
+      {bool reload = false, bool isUpdate = false}) async {
+    if (reload || _userInfo == null) {
       _userInfo = null;
       _isLoading = true;
-      if(isUpdate) {
+      if (isUpdate) {
         update();
       }
     }
 
-    if(_userInfo == null) {
+    if (_userInfo == null) {
       Response response = await profileRepo.getProfileDataApi();
       if (response.statusCode == 200) {
+        debugPrint('asd');
         _userInfo = ProfileModel.fromJson(response.body);
 
         Get.find<AuthController>().setUserData(UserShortDataModel(
           name: '${_userInfo!.fName} ${_userInfo!.lName}',
-          phone: userInfo?.phone?.replaceAll('${CustomCountryCodeWidget.getCountryCode(userInfo?.phone)}', ''),
+          phone: userInfo?.phone?.replaceAll(
+              '${CustomCountryCodeWidget.getCountryCode(userInfo?.phone)}', ''),
           countryCode: CustomCountryCodeWidget.getCountryCode(userInfo?.phone),
           qrCode: _userInfo?.qrCode,
         ));
-
       } else {
         ApiChecker.checkApi(response);
+
+        debugPrint('assd');
       }
       _isLoading = false;
       update();
     }
-
   }
 
-  Future<void> changePin({required String oldPassword, required String newPassword, required String confirmPassword}) async {
+  Future<void> changePin(
+      {required String oldPassword,
+      required String newPassword,
+      required String confirmPassword}) async {
     if ((oldPassword.length < 4) ||
         (newPassword.length < 4) ||
         (confirmPassword.length < 4)) {
@@ -78,7 +83,9 @@ class ProfileController extends GetxController implements GetxService {
       _isLoading = true;
       update();
       Response response = await profileRepo.changePinApi(
-        oldPin: oldPassword, newPin: newPassword, confirmPin: confirmPassword,
+        oldPin: oldPassword,
+        newPin: newPassword,
+        confirmPin: confirmPassword,
       );
 
       if (response.statusCode == 200) {
@@ -86,9 +93,9 @@ class ProfileController extends GetxController implements GetxService {
         UserShortDataModel? userData = Get.find<AuthController>().getUserData();
 
         Get.offAllNamed(RouteHelper.getLoginRoute(
-          countryCode: userData?.countryCode, phoneNumber: userData?.phone,
+          countryCode: userData?.countryCode,
+          phoneNumber: userData?.phone,
         ));
-
       } else {
         ApiChecker.checkApi(response);
       }
@@ -97,14 +104,15 @@ class ProfileController extends GetxController implements GetxService {
     }
   }
 
-  Future<Response> pinVerify({required String? getPin, bool isUpdateTwoFactor = true}) async {
+  Future<Response> pinVerify(
+      {required String? getPin, bool isUpdateTwoFactor = true}) async {
     bottomSliderController.setIsLoading = true;
     final Response response = await profileRepo.pinVerifyApi(pin: getPin);
 
     if (response.statusCode == 200) {
       bottomSliderController.isPinVerified = true;
       bottomSliderController.setIsLoading = false;
-      if(isUpdateTwoFactor) {
+      if (isUpdateTwoFactor) {
         updateTwoFactor();
       }
       bottomSliderController.resetPinField();
@@ -135,8 +143,6 @@ class ProfileController extends GetxController implements GetxService {
     update();
   }
 
-
-
   void routeToTwoFactorAuthScreen(String getPin) {
     pinVerify(getPin: getPin);
   }
@@ -162,7 +168,6 @@ class ProfileController extends GetxController implements GetxService {
       textValue = 'Switch Button is ON';
       Get.find<ThemeController>().toggleTheme();
       update();
-
     } else {
       _isSwitched = false;
       textValue = 'Switch Button is OFF';
@@ -172,7 +177,8 @@ class ProfileController extends GetxController implements GetxService {
   }
 
   void logOut(BuildContext context) {
-    DialogHelper.showAnimatedDialog(context,
+    DialogHelper.showAnimatedDialog(
+        context,
         CustomDialogWidget(
           icon: Icons.logout,
           title: 'logout'.tr,
@@ -180,25 +186,37 @@ class ProfileController extends GetxController implements GetxService {
           onTapFalseText: 'clear_logout'.tr,
           onTapTrueText: 'logout'.tr,
           isFailed: true,
-          onTapFalse: (){
+          onTapFalse: () {
             Get.find<AuthController>().removeBiometricPin().then((value) {
               Get.find<OnBoardingController>().updatePageIndex(0);
               Get.find<AuthController>().logout();
               Get.find<SplashController>().removeSharedData();
-              Navigator.pop(context);
-            });
 
+              Get.offAllNamed(RouteHelper.getChoseLoginRegRoute());
+            });
           },
-          onTapTrue: (){
-            Get.find<AuthController>().logout();
-            Navigator.of(context).pop(true);
+          onTapTrue: () {
+            try {
+              Get.find<AuthController>().logout();
+              Navigator.of(context).pop(true);
+
+              UserShortDataModel? userData =
+                  Get.find<AuthController>().getUserData();
+
+              Get.offNamed(RouteHelper.getLoginRoute(
+                countryCode: userData?.countryCode,
+                phoneNumber: userData?.phone,
+              ));
+            } catch (e) {
+              debugPrint('$e');
+            }
           },
         ),
         dismissible: false,
         isFlip: true);
   }
 
-  setGender(String select){
+  setGender(String select) {
     _gender = select;
     update();
   }
