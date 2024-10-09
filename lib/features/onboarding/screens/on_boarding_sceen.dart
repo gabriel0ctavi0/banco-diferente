@@ -43,7 +43,7 @@ class OnBoardingScreen extends StatelessWidget {
                 ),
               ),
 
-              const Spacer(flex: 532),
+              const Spacer(flex: 5),
 
               /// Proceeding Text
               Padding(
