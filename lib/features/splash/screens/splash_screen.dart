@@ -64,7 +64,7 @@ class _SplashScreenState extends State<SplashScreen>
                   phoneNumber: userData.phone,
                 ));
               } else {
-                Get.offNamed(RouteHelper.getRegistrationRoute());
+                Get.offNamed(RouteHelper.getChoseLoginRegRoute());
               }
             });
           });

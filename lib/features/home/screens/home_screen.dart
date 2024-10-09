@@ -66,8 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 physics: const AlwaysScrollableScrollPhysics(),
                 child:
                     GetBuilder<SplashController>(builder: (splashController) {
-                  int themeIndex =
-                      splashController.configModel!.themeIndex ?? 1;
+                  int themeIndex = 1;
                   return Column(children: [
                     themeIndex == 1
                         ? const ThemeOneWidget()

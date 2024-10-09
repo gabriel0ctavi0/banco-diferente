@@ -22,31 +22,36 @@ class HomeAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
-    return GetBuilder<ProfileController>(
-      builder: (profileController) {
-        return Container(
-          color: Theme.of(context).primaryColor,
-          child: Container(
-            padding: const EdgeInsets.only(
-              top: 54, left: Dimensions.paddingSizeLarge,
-              right: Dimensions.paddingSizeLarge,
-              bottom: Dimensions.paddingSizeSmall,
+    return GetBuilder<ProfileController>(builder: (profileController) {
+      return Container(
+        color: Theme.of(context).primaryColor,
+        child: Container(
+          padding: const EdgeInsets.only(
+            top: 54,
+            left: Dimensions.paddingSizeLarge,
+            right: Dimensions.paddingSizeLarge,
+            bottom: Dimensions.paddingSizeSmall,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.1),
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(Dimensions.radiusSizeExtraLarge),
             ),
-
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(Dimensions.radiusSizeExtraLarge),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Image.asset(
+                Images.logo,
+                width: 50,
+                height: 50,
               ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(children: [
+
+              Row(
+                children: [
                   GestureDetector(
-                    onTap: () => Get.find<MenuItemController>().selectProfilePage(),
+                    onTap: () =>
+                        Get.find<MenuItemController>().selectProfilePage(),
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
@@ -54,86 +59,44 @@ class HomeAppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                       height: Dimensions.radiusSizeOverLarge,
                       width: Dimensions.radiusSizeOverLarge,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: profileController.userInfo == null ? Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.asset(Images.avatar,fit: BoxFit.cover),
-                          ),
-                        ) : CustomImageWidget(
-                          image: '${Get.find<SplashController>().configModel!.baseUrls!.customerImageUrl}/${profileController.userInfo!.image ?? ''}',
-                          fit: BoxFit.cover,
-                          placeholder: Images.avatar,
-                        ),
-
+                        borderRadius: BorderRadius.circular(1000),
+                        child: profileController.userInfo == null
+                            ? Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.asset(Images.avatar,
+                                      fit: BoxFit.cover),
+                                ),
+                              )
+                            : const Icon(
+                                Icons.account_circle_outlined,
+                                color: Colors.white,
+                                size: 35,
+                              ),
                       ),
                     ),
                   ),
                   const SizedBox(width: Dimensions.paddingSizeSmall),
+                  // Get.find<SplashController>().configModel!.themeIndex == 1
+                  //     ? const UserNameWidget()
+                  //     : const _BalanceWidget(),
+                ],
+              ),
 
-                  Get.find<SplashController>().configModel!.themeIndex == 1
-                      ? const UserNameWidget()
-                      : const _BalanceWidget(),
-                ],),
-
-                // const Spacer(),
-
-                Row(children: [
-                  GetBuilder<SplashController>(builder: (splashController) {
-                    bool isRequestMoney = splashController.configModel!.systemFeature!.withdrawRequestStatus!;
-                    return isRequestMoney ? AnimatedButtonWidget(
-                      onTap: ()=> Get.to(()=> const TransactionBalanceInputScreen(
-                        transactionType: TransactionType.withdrawRequest,
-                      )),
-                    ) : const SizedBox();
-                  }
-                  ),
-                  const SizedBox(width: Dimensions.paddingSizeSmall,),
-
-
-                  GestureDetector(
-                    onTap: () => Navigator.of(context).push(HeroDialogRouteWidget(builder:(_) =>const _QrPopupCardWidget())),
-
-                    child: Hero(
-                      tag: Get.find<HomeController>().heroShowQr,
-                      createRectTween: (begin, end) => TweenHelper(begin: begin, end: end),
-
-                      child: Container(
-                        width: Get.width * 0.11,
-                        height: Get.width * 0.11,
-                        padding: EdgeInsets.all(Get.width * 0.025),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle, color: Theme.of(context).cardColor.withOpacity(Get.isDarkMode ?  0.7 : 1),
-                        ),
-                        child: profileController.userInfo != null ? SvgPicture.string(
-                          profileController.userInfo!.qrCode!,
-                          height: Dimensions.paddingSizeLarge,
-                          width: Dimensions.paddingSizeLarge,
-                        ) :
-                        SizedBox(
-                          height: Dimensions.paddingSizeLarge,
-                          width: Dimensions.paddingSizeLarge,
-                          child: Image.asset(Images.qrCode),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],)
-              ],
-            ),
+              // const Spacer(),
+            ],
           ),
-        );
-      }
-    );
+        ),
+      );
+    });
   }
 
   @override
   Size get preferredSize => const Size(double.maxFinite, 200);
 }
-
 
 class _QrPopupCardWidget extends StatelessWidget {
   const _QrPopupCardWidget({Key? key}) : super(key: key);
@@ -153,7 +116,7 @@ class _QrPopupCardWidget extends StatelessWidget {
             color: Colors.white,
             elevation: 2,
             shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: GetBuilder<ProfileController>(
@@ -175,35 +138,40 @@ class _QrPopupCardWidget extends StatelessWidget {
   }
 }
 
-
 class _BalanceWidget extends StatelessWidget {
   const _BalanceWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ProfileController>(
-        builder: (profileController) {
-          return Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(PriceConverterHelper.balanceWithSymbol(balance: '${profileController.userInfo?.balance ?? 0}'), style: rubikMedium.copyWith(
-                color: Colors.white, fontSize: Dimensions.fontSizeExtraLarge,
+    return GetBuilder<ProfileController>(builder: (profileController) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+              PriceConverterHelper.balanceWithSymbol(
+                  balance: '${profileController.userInfo?.balance ?? 0}'),
+              style: rubikMedium.copyWith(
+                color: Colors.white,
+                fontSize: Dimensions.fontSizeExtraLarge,
               )),
-              const SizedBox(height: Dimensions.paddingSizeExtraSmall),
-
-              Text('available_balance'.tr, style: rubikLight.copyWith(
-                fontSize: Dimensions.fontSizeDefault, color: Colors.white,
+          const SizedBox(height: Dimensions.paddingSizeExtraSmall),
+          Text('available_balance'.tr,
+              style: rubikLight.copyWith(
+                fontSize: Dimensions.fontSizeDefault,
+                color: Colors.white,
               )),
-              const SizedBox(height: Dimensions.paddingSizeExtraSmall,),
-
-              if(profileController.userInfo != null) Text(
-                '(${'sent'.tr} ${PriceConverterHelper.balanceWithSymbol(balance: '${profileController.userInfo?.pendingBalance ?? 0}')} ${'withdraw_req'.tr})',
-                style: rubikMedium.copyWith(color: Colors.white, fontSize: Dimensions.fontSizeSmall),
-              ),
-
-            ],
-          );
-        }
-    );
+          const SizedBox(
+            height: Dimensions.paddingSizeExtraSmall,
+          ),
+          if (profileController.userInfo != null)
+            Text(
+              '(${'sent'.tr} ${PriceConverterHelper.balanceWithSymbol(balance: '${profileController.userInfo?.pendingBalance ?? 0}')} ${'withdraw_req'.tr})',
+              style: rubikMedium.copyWith(
+                  color: Colors.white, fontSize: Dimensions.fontSizeSmall),
+            ),
+        ],
+      );
+    });
   }
 }
-

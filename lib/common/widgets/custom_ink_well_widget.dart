@@ -5,7 +5,13 @@ class CustomInkWellWidget extends StatelessWidget {
   final Widget child;
   final VoidCallback? onTap;
   final Color? highlightColor;
-  const CustomInkWellWidget({Key? key, this.radius,required this.child,required this.onTap, this.highlightColor}) : super(key: key);
+  const CustomInkWellWidget(
+      {Key? key,
+      this.radius,
+      required this.child,
+      required this.onTap,
+      this.highlightColor})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,9 +19,9 @@ class CustomInkWellWidget extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(radius??0.0),
-        highlightColor: highlightColor ?? Theme.of(context).primaryColor.withOpacity(0.5),
-        hoverColor: Theme.of(context).primaryColor,
+        borderRadius: BorderRadius.circular(radius ?? 0.0),
+        highlightColor:
+            highlightColor ?? Theme.of(context).primaryColor.withOpacity(0.5),
         child: child,
       ),
     );

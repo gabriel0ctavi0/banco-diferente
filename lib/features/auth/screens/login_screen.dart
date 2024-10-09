@@ -182,40 +182,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ],
                                     ),
                                     const Spacer(),
-                                    SizedBox(
-                                        height: 50,
-                                        width: 50,
-                                        child: Stack(children: [
-                                          GetBuilder<AuthController>(
-                                              builder: (controller) {
-                                            return userData?.qrCode != null
-                                                ? InkWell(
-                                                    onTap: () => Navigator.of(
-                                                            context)
-                                                        .push(HeroDialogRouteWidget(
-                                                            builder: (_) =>
-                                                                const QrCodePopupWidget())),
-                                                    child: Hero(
-                                                      tag: _heroQrTag,
-                                                      createRectTween:
-                                                          (begin, end) =>
-                                                              TweenHelper(
-                                                                  begin: begin,
-                                                                  end: end),
-                                                      child: Container(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(2),
-                                                        color: Colors.white,
-                                                        child:
-                                                            SvgPicture.string(
-                                                                userData!
-                                                                    .qrCode!),
-                                                      ),
-                                                    ))
-                                                : Container();
-                                          }),
-                                        ])),
                                   ],
                                 );
                               }),

@@ -1,154 +1,101 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:six_cash/features/onboarding/controllers/on_boarding_controller.dart';
 import 'package:six_cash/helper/route_helper.dart';
 import 'package:six_cash/util/app_constants.dart';
 import 'package:six_cash/util/color_resources.dart';
 import 'package:six_cash/util/dimensions.dart';
 import 'package:six_cash/util/styles.dart';
 import 'package:six_cash/common/widgets/custom_small_button_widget.dart';
-import 'package:six_cash/features/onboarding/widgets/indicator_widget.dart';
 
 class OnBoardingScreen extends StatelessWidget {
   const OnBoardingScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Theme.of(context).cardColor,
-      body: Column(children: [
-        Expanded(
-            child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Expanded(
-                flex: 15,
-                child: PageView.builder(
-                  itemCount: AppConstants.onboardList.length,
-                  scrollDirection: Axis.horizontal,
-                  onPageChanged: (page) {
-                    Get.find<OnBoardingController>().updatePageIndex(page);
-                  },
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        SizedBox(
-                            height: size.width,
-                            width: size.width,
-                            child: Stack(
-                              children: [
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: Image.asset(
-                                    AppConstants
-                                        .onboardList[index].backgroundImage,
-                                    fit: BoxFit.fitWidth,
-                                  ),
-                                ),
-                                Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: SizedBox(
-                                      height:
-                                          MediaQuery.of(context).size.width *
-                                              0.6,
-                                      child: Image.asset(
-                                          AppConstants.onboardList[index].image,
-                                          fit: BoxFit.fitHeight),
-                                    )),
-                              ],
-                            )),
-                        const Spacer(),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: Dimensions.paddingSizeDefault),
-                          child: Column(
-                            children: [
-                              Text(
-                                AppConstants.onboardList[index].title,
-                                style: rubikSemiBold.copyWith(
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .color,
-                                  fontSize: Dimensions.fontSizeExtraLarge,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              const SizedBox(
-                                height: Dimensions.paddingSizeDefault,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: Dimensions.radiusSizeSmall),
-                                child: Text(
-                                  AppConstants.onboardList[index].subtitle,
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: rubikMedium.copyWith(
-                                    color: ColorResources.getOnboardGreyColor(),
-                                    fontSize: Dimensions.fontSizeLarge,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ],
-                          ),
+      body: Stack(
+        children: [
+          /// Background Image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/image/onboarding_bg.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+
+          /// Overlay Content
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Spacer(),
+
+              /// Welcome Text
+              Padding(
+                padding: const EdgeInsets.all(Dimensions.paddingSizeOverLarge),
+                child: Text(
+                  'Seja bem-vindo(a) ao Banco Diferente',
+                  style: rubikSemiBold.copyWith(
+                    fontSize: Dimensions.fontSizeOverOverLarge,
+                    color: Colors.white, // Use a cor de texto conforme o tema
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+
+              const Spacer(flex: 532),
+
+              /// Proceeding Text
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Dimensions.paddingSizeDefault,
+                  vertical: Dimensions.paddingSizeSmall,
+                ),
+                child: RichText(
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        style: rubikRegular.copyWith(
+                          color: Colors.white,
+                          fontSize: Dimensions.fontSizeSmall,
                         ),
-                        const SizedBox(height: Dimensions.paddingSizeOverLarge),
-                      ],
-                    );
-                  },
-                )),
-            const IndicatorWidget(),
-            const SizedBox(height: Dimensions.paddingSizeDefault),
-          ],
-        )),
-        Column(children: [
-          RichText(
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            text: TextSpan(
-              children: [
-                TextSpan(
-                  style: rubikRegular.copyWith(
-                    color: Theme.of(context).textTheme.bodyLarge!.color,
-                    fontSize: Dimensions.fontSizeSmall,
+                        text: "${'by_proceeding_you'.tr} ",
+                      ),
+                      TextSpan(
+                        style: rubikRegular.copyWith(
+                          color: Colors.white,
+                          fontSize: Dimensions.fontSizeSmall,
+                          decoration: TextDecoration.underline,
+                        ),
+                        text: 'privacy_policy'.tr,
+                        recognizer: TapGestureRecognizer()
+                          ..onTap =
+                              () async => Get.toNamed(RouteHelper.privacy),
+                      ),
+                    ],
                   ),
-                  text: "${'by_proceeding_you'.tr} ",
                 ),
-                TextSpan(
-                  style: rubikRegular.copyWith(
-                    color: Theme.of(context).primaryColor,
-                    fontSize: Dimensions.fontSizeSmall,
-                    decoration: TextDecoration.underline,
-                  ),
-                  text: 'privacy_policy'.tr,
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () async => Get.toNamed(RouteHelper.privacy),
+              ),
+
+              Container(
+                width: context.width * 0.7,
+                padding: const EdgeInsets.only(
+                    left: Dimensions.paddingSizeDefault,
+                    right: Dimensions.paddingSizeDefault,
+                    bottom: Dimensions.paddingSizeExtraExtraLarge),
+                child: CustomSmallButtonWidget(
+                  onTap: () => Get.toNamed(RouteHelper.getRegistrationRoute()),
+                  backgroundColor: Theme.of(context).primaryColor,
+                  text: 'login_registration'.tr,
+                  textColor: Colors.white,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          const SizedBox(
-            height: Dimensions.paddingSizeSmall,
-          ),
-          Container(
-            width: context.width * 0.7,
-            padding: const EdgeInsets.only(
-                left: Dimensions.paddingSizeDefault,
-                right: Dimensions.paddingSizeDefault,
-                bottom: Dimensions.paddingSizeExtraExtraLarge),
-            child: CustomSmallButtonWidget(
-              onTap: () => Get.toNamed(RouteHelper.getRegistrationRoute()),
-              backgroundColor: Theme.of(context).secondaryHeaderColor,
-              text: 'login_registration'.tr,
-              textColor: Theme.of(context).textTheme.bodyLarge!.color,
-            ),
-          ),
-        ])
-      ]),
+        ],
+      ),
     );
   }
 }

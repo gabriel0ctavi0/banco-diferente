@@ -49,7 +49,6 @@ class ProfileController extends GetxController implements GetxService {
     if (_userInfo == null) {
       Response response = await profileRepo.getProfileDataApi();
       if (response.statusCode == 200) {
-        debugPrint('asd');
         _userInfo = ProfileModel.fromJson(response.body);
 
         Get.find<AuthController>().setUserData(UserShortDataModel(
@@ -61,8 +60,6 @@ class ProfileController extends GetxController implements GetxService {
         ));
       } else {
         ApiChecker.checkApi(response);
-
-        debugPrint('assd');
       }
       _isLoading = false;
       update();
